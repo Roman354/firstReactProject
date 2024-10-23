@@ -1,6 +1,11 @@
 import './App.css';
 import React, {useState, useEffect}  from 'react';
 
+const bookmarkArr = [
+    {key:1, name:"Google", href:"https://www.google.ru/"},
+    {key:2, name:"Youtube", href:"https://www.youtube.com/"},
+    {key:3 , name:"Yandex", href:"https://ya.ru/"}
+]
 
 
 
@@ -9,7 +14,8 @@ import React, {useState, useEffect}  from 'react';
 function App() {
     const[modalWindowFlag, setModalWindowFlag] = useState(false);
 
-    console.log(modalWindowFlag);
+   
+
 
     function handlerClick(){
         setModalWindowFlag(true)
@@ -27,16 +33,14 @@ function App() {
             />
             <header className="App-header">
                 <div className="Page-container">
-                    <div className="Page-bookmark"><span className='Bookmarks-Name'>Google</span></div>
-                    <div className="Page-bookmark"><span className='Bookmarks-Name'></span></div>
-                    <div className="Page-bookmark"><span className='Bookmarks-Name'></span></div>
-                    <div className="Page-bookmark"><span className='Bookmarks-Name'></span></div>
-                    <div className="Page-bookmark"><span className='Bookmarks-Name'></span></div>
-                    <div className="Page-bookmark"><span className='Bookmarks-Name'>Ds</span></div>
-                    <div className="Page-bookmark"><span className='Bookmarks-Name'>yandex</span></div>
-                    <div 
-                        onClick={handlerClick}
-                    className="Page-bookmark"><span className='Bookmarks-Name'>Создать</span></div>
+                    {/* <Bookmark name="Google" href="https://www.google.ru/" />
+                    <Bookmark name="Youtube" href="https://www.youtube.com/" />
+                    <Bookmark name="Yandex" href="https://ya.ru/" /> */}
+                    {/* {listBookmark} */}
+                    <Bookmarks />
+                    <CreateBlock 
+                        cb={handlerClick}
+                    />
                     
                 </div>
            
@@ -44,19 +48,37 @@ function App() {
         </div>
   );
 }
+function Bookmarks(){
+    const listBookmark = bookmarkArr.map(bookmark => 
+        <a key={bookmark.key} target="_blank" rel="noreferrer" href={bookmark.href}>
+            <div className="Page-bookmark">
+                <span className='Bookmarks-Name'>{bookmark.name}</span>
+            </div>
+        </a>
+    );
+
+    return(
+       <>
+        {listBookmark}
+       </>
+    )
+}
+
+function CreateBlock(props){
+    return(
+        <div 
+            onClick={props.cb}
+            className="Page-bookmark">
+                <span className='Bookmarks-Name'>Создать</span>
+        </div>
+    )
+}
 
 function ModalWindow(props){
-    // const [flagRender, setRenderFlag] = useState(props.flag);
-    
-
 
     function handlerClick(){
         props.cb();
-        // setRenderFlag(false);
-        // console.log(flagRender);
-        // e.stopPropagation();
     }
-
 
     return(
         <div className={ props.flag ? "ModalContainer" : "ModalContainer disable"}>
@@ -74,9 +96,7 @@ function ModalWindow(props){
                 <button onClick={handlerClick} className='ButtonModal'>Добавить</button>
         </div>
     )
-  
 }
-
 
 function Clock (){
     const [time, setTime] = useState(new Date())
@@ -98,7 +118,6 @@ function Clock (){
             <p>{timeString}</p>
         </div>
     )
-
 }
 
 export default App;
