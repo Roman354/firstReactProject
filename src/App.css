@@ -1,38 +1,90 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
-  background-color: #282c34;
+
   min-height: 100vh;
+ 
+  background: url("/img/background.jpeg") no-repeat center center;
+  background-size: cover;
+}
+.Page-bookmark{
+  width: 200px;
+  height: 100px;
+  /* background: #b7b6b6; */
+  box-shadow: inset 1px 1px 6px #0c0c0c;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+}
+.Bookmarks-Name{
+  width: 100%;
+  text-align: center;
+  background: #000000d9;
+  color: white;
+  border-radius: 4px;
+  padding: 2px;
+  height: 22px;
+}
+.Page-container{
+  display: flex;
+  height:100%;
+
+  gap: 10px 20px;
+  align-items: baseline;
+  padding: 10%;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.ClockDiv{
+  position: absolute;
+  color: white;
+  padding: 5px 10px;
+  background: #00000066;
+  border-radius: 20px;
+  margin: 5px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ModalContainer{
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 10px;
+  position: fixed;
+  background: #0a0a0a80;
+  padding: 20px;
+  top: 10%;
+  left: 40%;
+  color: #fff;
+  height: auto;
+  width: 20%;
 }
-
-.App-link {
-  color: #61dafb;
+.disable{
+  display: none;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.ModalFlex{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.ButtonModal{
+  background: #4c8807;
+  width: 200px;
+  height: 40px;
+  border: none;
+  box-shadow: inset 0px 0px 9px #c5b8a6;
+  border-radius: 10px;
+  font-size: 16px;
+}
+.ButtonModal:hover{
+  font-size: 18px;
+  background: #67b709;
+  cursor: pointer;
+  z-index: 2;
+}
+.InputModal{
+  width: auto;
+  height: 25px;
+  border-radius: 8px;
 }
