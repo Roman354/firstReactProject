@@ -21,6 +21,9 @@ function App() {
             <Clock />
             <ModalWindow 
                 flag={modalWindowFlag}
+                cb={()=>{
+                    setModalWindowFlag(false)
+                }}
             />
             <header className="App-header">
                 <div className="Page-container">
@@ -48,7 +51,7 @@ function ModalWindow(props){
 
 
     function handlerClick(){
-    
+        props.cb();
         // setRenderFlag(false);
         // console.log(flagRender);
         // e.stopPropagation();
