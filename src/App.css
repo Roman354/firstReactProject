@@ -5,7 +5,8 @@
   background: url("/img/background.jpeg") no-repeat center center;
   background-size: cover;
 }
-.Page-bookmark{
+
+.Inscription-bookmark{
   width: 200px;
   height: 100px;
   /* background: #b7b6b6; */
@@ -15,6 +16,15 @@
   justify-content: center;
   align-items: flex-end;
 
+}
+.Link-bookmark{
+  text-decoration: none;
+}
+.Create-block{
+  cursor: pointer;
+}
+a.Link-bookmark:hover, .Create-block:hover{
+  transform: scale(1.1);
 }
 .Bookmarks-Name{
   width: 100%;
@@ -59,6 +69,16 @@
   color: #fff;
   height: auto;
   width: 20%;
+  z-index: 2;
+}
+.ModalBackground{
+    top: 0;
+    left: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: #000000a3;
+    z-index: 1;
 }
 .disable{
   display: none;
@@ -81,7 +101,7 @@
   font-size: 18px;
   background: #67b709;
   cursor: pointer;
-  z-index: 2;
+  z-index: 3;
 }
 .InputModal{
   width: auto;

@@ -14,12 +14,9 @@ const bookmarkArr = [
 function App() {
     const[modalWindowFlag, setModalWindowFlag] = useState(false);
 
-   
-
-
     function handlerClick(){
-        setModalWindowFlag(true)
-        console.log(modalWindowFlag)
+        setModalWindowFlag(true);
+        // console.log(modalWindowFlag)
     }
 
     return (
@@ -37,7 +34,9 @@ function App() {
                     <Bookmark name="Youtube" href="https://www.youtube.com/" />
                     <Bookmark name="Yandex" href="https://ya.ru/" /> */}
                     {/* {listBookmark} */}
-                    <Bookmarks />
+                    <Bookmarks 
+                        bookmarks={bookmarkArr}
+                    />
                     <CreateBlock 
                         cb={handlerClick}
                     />
@@ -48,52 +47,95 @@ function App() {
         </div>
   );
 }
-function Bookmarks(){
-    const listBookmark = bookmarkArr.map(bookmark => 
-        <a key={bookmark.key} target="_blank" rel="noreferrer" href={bookmark.href}>
-            <div className="Page-bookmark">
-                <span className='Bookmarks-Name'>{bookmark.name}</span>
-            </div>
-        </a>
-    );
-
+function Bookmarks({bookmarks}){
+    
+    function getListBookmark () {
+        return bookmarks.map(bookmark => 
+            <a className="Link-bookmark" key={bookmark.key} target="_blank" rel="noreferrer" href={bookmark.href}>
+                <div className="Inscription-bookmark">
+                    <span className='Bookmarks-Name'>{bookmark.name}</span>
+                </div>
+            </a>
+        );
+    } 
+    // const[list, setList] = useState(getListBookmark);
+   
+    // useEffect(()=>{
+    //     setList(
+    //         getListBookmark
+    //     )
+    // }, [bookmarks])
+    const list = getListBookmark();
     return(
        <>
-        {listBookmark}
+        {list}
        </>
     )
 }
 
 function CreateBlock(props){
+
     return(
         <div 
             onClick={props.cb}
-            className="Page-bookmark">
+            className="Inscription-bookmark Create-block">
                 <span className='Bookmarks-Name'>Создать</span>
         </div>
     )
 }
 
 function ModalWindow(props){
+    const [link, setLink] = useState("");
+    const [nameLink, setNameLink] = useState("");
 
     function handlerClick(){
-        props.cb();
+        let key = bookmarkArr.length + 1;
+        bookmarkArr.push({key:key, name: nameLink, href: link})
+        setLink("");
+        setNameLink("");
     }
 
+    function getInputValueLink(e){
+        setLink(e.target.value)
+        console.log("link", link)
+       
+       
+    }
+    function getInputValueNameLink(e){
+        setNameLink(e.target.value);
+        console.log("nameLink", nameLink);
+    }
+    
     return(
-        <div className={ props.flag ? "ModalContainer" : "ModalContainer disable"}>
-                <span>Добавить Закладку</span>
-            <div className='ModalFlex'>
-                <span>Ссылка на страницу:</span>
-                <input className='InputModal' type="text" placeholder="https://google.com/"></input>
+        <div onClick={props.cb}
+            className={props.flag ? "ModalBackground" : "ModalBackground disable"}>
+            <div className="ModalContainer" 
+                onClick={(e) => {
+                    e.stopPropagation();
+                }}
+            >
+                    <span>Добавить Закладку</span>
+                <div className='ModalFlex'>
+                    <span>Ссылка на страницу:</span>
+                    <input onChange={getInputValueLink}
+                    className='InputModal'
+                    type="text"
+                    placeholder="https://google.com/"></input>
+                </div>
+                <div className='ModalFlex'>
+                    <span>
+                        Название(не обязательно):
+                    </span>
+                    <input 
+                        onChange={getInputValueNameLink}
+                    className='InputModal' type="text" placeholder="Google"></input>
+                </div>
+                    <button onClick={() => {
+                        handlerClick();
+                        props.cb();
+                    }
+                    } className='ButtonModal'>Добавить</button>
             </div>
-            <div className='ModalFlex'>
-                <span>
-                    Название(не обязательно):
-                </span>
-                <input className='InputModal' type="text" placeholder="Google"></input>
-            </div>
-                <button onClick={handlerClick} className='ButtonModal'>Добавить</button>
         </div>
     )
 }
