@@ -1,48 +1,44 @@
 import './App.css';
-import React, {useState, useEffect}  from 'react';
-
-const bookmarkArr = [
-    {key:1, name:"Google", href:"https://www.google.ru/"},
-    {key:2, name:"Youtube", href:"https://www.youtube.com/"},
-    {key:3 , name:"Yandex", href:"https://ya.ru/"}
-]
+import React, {useState, useEffect, useRef}  from 'react';
+import useLocalStorage from "./useLocalStorage.js";
 
 
-
+// const bookmarkArr = [
+//     {key:1, name:"Google", href:"https://www.google.ru/"},
+//     {key:2, name:"Youtube", href:"https://www.youtube.com/"},
+//     {key:3 , name:"Yandex", href:"https://ya.ru/"}
+// ]
 
 
 function App() {
-    const[modalWindowFlag, setModalWindowFlag] = useState(false);
-
+    const [modalWindowFlag, setModalWindowFlag] = useState(false);
+    const [bookmarkArr, setBookmarkArr] = useLocalStorage("bookmarks",  []);
+   
     function handlerClick(){
         setModalWindowFlag(true);
-        // console.log(modalWindowFlag)
     }
 
     return (
         <div className="App">
             <Clock />
             <ModalWindow 
+    
                 flag={modalWindowFlag}
+                bookmarks={bookmarkArr}
+                setBookmarkArr={setBookmarkArr}
                 cb={()=>{
                     setModalWindowFlag(false)
                 }}
             />
             <header className="App-header">
                 <div className="Page-container">
-                    {/* <Bookmark name="Google" href="https://www.google.ru/" />
-                    <Bookmark name="Youtube" href="https://www.youtube.com/" />
-                    <Bookmark name="Yandex" href="https://ya.ru/" /> */}
-                    {/* {listBookmark} */}
                     <Bookmarks 
                         bookmarks={bookmarkArr}
                     />
                     <CreateBlock 
                         cb={handlerClick}
                     />
-                    
                 </div>
-           
             </header>
         </div>
   );
@@ -52,7 +48,9 @@ function Bookmarks({bookmarks}){
     function getListBookmark () {
         return bookmarks.map(bookmark => 
             <a className="Link-bookmark" key={bookmark.key} target="_blank" rel="noreferrer" href={bookmark.href}>
+                  
                 <div className="Inscription-bookmark">
+                    <img src="img.png" alt="logo"></img>
                     <span className='Bookmarks-Name'>{bookmark.name}</span>
                 </div>
             </a>
@@ -65,6 +63,7 @@ function Bookmarks({bookmarks}){
     //         getListBookmark
     //     )
     // }, [bookmarks])
+
     const list = getListBookmark();
     return(
        <>
@@ -87,25 +86,45 @@ function CreateBlock(props){
 function ModalWindow(props){
     const [link, setLink] = useState("");
     const [nameLink, setNameLink] = useState("");
+    const inputLinkRef = useRef(null);
+    const inputNameRef = useRef(null);
 
-    function handlerClick(){
-        let key = bookmarkArr.length + 1;
-        bookmarkArr.push({key:key, name: nameLink, href: link})
-        setLink("");
-        setNameLink("");
+
+
+    function getDomainFromUrl(url) {
+        const parsedUrl = new URL(url);
+        console.log(parsedUrl.hostname)
+        return parsedUrl.hostname;
     }
 
+    function handlerClick(){
+        if(link.length){
+            let name = nameLink;
+            if(!nameLink.length)
+            {
+                inputNameRef.current.value = getDomainFromUrl(link);
+                name = inputNameRef.current.value;
+            }
+
+            let key = props.bookmarks.length + 1;
+            props.setBookmarkArr(
+            [
+                ...props.bookmarks,
+                {key:key, name: name, href: link}
+            ]);
+
+            inputNameRef.current.value =""
+            inputLinkRef.current.value=""
+            setLink("");
+            setNameLink("");
+        }
+    }
     function getInputValueLink(e){
-        setLink(e.target.value)
-        console.log("link", link)
-       
-       
+        setLink(e.target.value)   
     }
     function getInputValueNameLink(e){
         setNameLink(e.target.value);
-        console.log("nameLink", nameLink);
     }
-    
     return(
         <div onClick={props.cb}
             className={props.flag ? "ModalBackground" : "ModalBackground disable"}>
@@ -117,18 +136,21 @@ function ModalWindow(props){
                     <span>Добавить Закладку</span>
                 <div className='ModalFlex'>
                     <span>Ссылка на страницу:</span>
-                    <input onChange={getInputValueLink}
-                    className='InputModal'
-                    type="text"
-                    placeholder="https://google.com/"></input>
+                    <input 
+                        ref={inputLinkRef}
+                        onChange={getInputValueLink}
+                        className='InputModal'
+                        type="text"
+                        placeholder="https://google.com/"></input>
                 </div>
                 <div className='ModalFlex'>
                     <span>
                         Название(не обязательно):
                     </span>
                     <input 
+                        ref={inputNameRef}
                         onChange={getInputValueNameLink}
-                    className='InputModal' type="text" placeholder="Google"></input>
+                        className='InputModal' type="text" placeholder="Google"></input>
                 </div>
                     <button onClick={() => {
                         handlerClick();
@@ -161,5 +183,4 @@ function Clock (){
         </div>
     )
 }
-
 export default App;
