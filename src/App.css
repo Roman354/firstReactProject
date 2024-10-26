@@ -19,15 +19,30 @@
 
 }
 .Link-bookmark{
+  position: relative;
   text-decoration: none;
 }
 .Create-block{
   cursor: pointer;
 }
+.Delete-bookmark{
+  color: red;
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  box-shadow: inset 0px 0px 0px 1px #000000;
+  text-align: center;
+}
+.Delete-bookmark:hover{
+  transform: scale(1.1);
+}
 a.Link-bookmark:hover, .Create-block:hover{
   transform: scale(1.1);
 }
 .Bookmarks-Name{
+  overflow: hidden;
   width: 100%;
   text-align: center;
   background: #000000d9;

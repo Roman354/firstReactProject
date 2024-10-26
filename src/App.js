@@ -2,19 +2,17 @@ import './App.css';
 import React, {useState, useEffect, useRef}  from 'react';
 import useLocalStorage from "./useLocalStorage.js";
 
-
 // const bookmarkArr = [
 //     {key:1, name:"Google", href:"https://www.google.ru/"},
 //     {key:2, name:"Youtube", href:"https://www.youtube.com/"},
 //     {key:3 , name:"Yandex", href:"https://ya.ru/"}
 // ]
 
-
 function App() {
     const [modalWindowFlag, setModalWindowFlag] = useState(false);
     const [bookmarkArr, setBookmarkArr] = useLocalStorage("bookmarks",  []);
    
-    function handlerClick(){
+    function handleClick(){
         setModalWindowFlag(true);
     }
 
@@ -34,21 +32,30 @@ function App() {
                 <div className="Page-container">
                     <Bookmarks 
                         bookmarks={bookmarkArr}
+                        setBookmarkArr={setBookmarkArr}
                     />
                     <CreateBlock 
-                        cb={handlerClick}
+                        cb={handleClick}
                     />
                 </div>
             </header>
         </div>
   );
 }
-function Bookmarks({bookmarks}){
-    
+function Bookmarks(props){
+
+    function handleClick(key){
+        props.setBookmarkArr(props.bookmarks.filter(a => a.key !== key))
+    }
     function getListBookmark () {
-        return bookmarks.map(bookmark => 
+        return props.bookmarks.map(bookmark => 
             <a className="Link-bookmark" key={bookmark.key} target="_blank" rel="noreferrer" href={bookmark.href}>
-                  
+                <span 
+                    onClick={(e)=>{
+                        e.preventDefault()
+                        handleClick(bookmark.key)
+                    }}
+                    className="Delete-bookmark">X</span>
                 <div className="Inscription-bookmark">
                     <img src="img.png" alt="logo"></img>
                     <span className='Bookmarks-Name'>{bookmark.name}</span>
@@ -97,7 +104,7 @@ function ModalWindow(props){
         return parsedUrl.hostname;
     }
 
-    function handlerClick(){
+    function handleClick(){
         if(link.length){
             let name = nameLink;
             if(!nameLink.length)
@@ -113,8 +120,8 @@ function ModalWindow(props){
                 {key:key, name: name, href: link}
             ]);
 
-            inputNameRef.current.value =""
-            inputLinkRef.current.value=""
+            inputNameRef.current.value = "";
+            inputLinkRef.current.value = "";
             setLink("");
             setNameLink("");
         }
@@ -126,7 +133,13 @@ function ModalWindow(props){
         setNameLink(e.target.value);
     }
     return(
-        <div onClick={props.cb}
+        <div onClick={()=>{
+            setLink("");
+            setNameLink("");
+            inputNameRef.current.value = "";
+            inputLinkRef.current.value = "";
+            props.cb();
+        }}
             className={props.flag ? "ModalBackground" : "ModalBackground disable"}>
             <div className="ModalContainer" 
                 onClick={(e) => {
@@ -153,7 +166,7 @@ function ModalWindow(props){
                         className='InputModal' type="text" placeholder="Google"></input>
                 </div>
                     <button onClick={() => {
-                        handlerClick();
+                        handleClick();
                         props.cb();
                     }
                     } className='ButtonModal'>Добавить</button>

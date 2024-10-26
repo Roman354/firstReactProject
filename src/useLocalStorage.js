@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 function useLocalStorage(key, initialValue) {
-  // Получаем значение из localStorage или устанавливаем начальное значение
   const [storedValue, setStoredValue] = useState(() => {
     try {
       const item = window.localStorage.getItem(key);
@@ -12,7 +11,6 @@ function useLocalStorage(key, initialValue) {
     }
   });
 
-  // Сохраняем значение в localStorage при его изменении
   const setValue = (value) => {
     try {
       const valueToStore = value instanceof Function ? value(storedValue) : value;
