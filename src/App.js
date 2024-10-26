@@ -11,7 +11,10 @@ import useLocalStorage from "./useLocalStorage.js";
 function App() {
     const [modalWindowFlag, setModalWindowFlag] = useState(false);
     const [bookmarkArr, setBookmarkArr] = useLocalStorage("bookmarks",  []);
-   
+    const [counterKey, setCounterKey] = useState(()=>{
+        return bookmarkArr.length > 0 ?  Math.max(...bookmarkArr.map(item => item.key)) + 1 : 0;
+    });
+
     function handleClick(){
         setModalWindowFlag(true);
     }
@@ -20,7 +23,8 @@ function App() {
         <div className="App">
             <Clock />
             <ModalWindow 
-    
+                counterKey={counterKey}
+                setCounterKey={setCounterKey}
                 flag={modalWindowFlag}
                 bookmarks={bookmarkArr}
                 setBookmarkArr={setBookmarkArr}
@@ -42,11 +46,13 @@ function App() {
         </div>
   );
 }
+
 function Bookmarks(props){
 
     function handleClick(key){
         props.setBookmarkArr(props.bookmarks.filter(a => a.key !== key))
     }
+
     function getListBookmark () {
         return props.bookmarks.map(bookmark => 
             <a className="Link-bookmark" key={bookmark.key} target="_blank" rel="noreferrer" href={bookmark.href}>
@@ -63,13 +69,6 @@ function Bookmarks(props){
             </a>
         );
     } 
-    // const[list, setList] = useState(getListBookmark);
-   
-    // useEffect(()=>{
-    //     setList(
-    //         getListBookmark
-    //     )
-    // }, [bookmarks])
 
     const list = getListBookmark();
     return(
@@ -95,13 +94,15 @@ function ModalWindow(props){
     const [nameLink, setNameLink] = useState("");
     const inputLinkRef = useRef(null);
     const inputNameRef = useRef(null);
-
-
-
+    
     function getDomainFromUrl(url) {
-        const parsedUrl = new URL(url);
-        console.log(parsedUrl.hostname)
-        return parsedUrl.hostname;
+        try {
+            const parsedUrl = new URL(url);
+            return parsedUrl.hostname;
+        } catch (_) {
+            return false;
+        }
+        
     }
 
     function handleClick(){
@@ -109,15 +110,16 @@ function ModalWindow(props){
             let name = nameLink;
             if(!nameLink.length)
             {
-                inputNameRef.current.value = getDomainFromUrl(link);
+                let domain = getDomainFromUrl(link);
+                inputNameRef.current.value = domain === false? link : domain;
                 name = inputNameRef.current.value;
             }
 
-            let key = props.bookmarks.length + 1;
+            props.setCounterKey(props.counterKey + 1)
             props.setBookmarkArr(
             [
                 ...props.bookmarks,
-                {key:key, name: name, href: link}
+                {key:props.counterKey, name: name, href: link}
             ]);
 
             inputNameRef.current.value = "";

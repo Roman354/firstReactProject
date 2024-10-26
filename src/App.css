@@ -26,6 +26,7 @@
   cursor: pointer;
 }
 .Delete-bookmark{
+  display: none;
   color: red;
   height: 20px;
   width: 20px;
@@ -34,12 +35,17 @@
   top: 5px;
   box-shadow: inset 0px 0px 0px 1px #000000;
   text-align: center;
+  
 }
 .Delete-bookmark:hover{
   transform: scale(1.1);
 }
 a.Link-bookmark:hover, .Create-block:hover{
+  
   transform: scale(1.1);
+}
+a.Link-bookmark:hover .Delete-bookmark{
+  display: block;
 }
 .Bookmarks-Name{
   overflow: hidden;
