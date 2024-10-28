@@ -130,6 +130,7 @@ function ModalWindow(props){
         }
         
     }
+
     function handleClick(){
         if(link.length){
             let name = nameLink;
@@ -141,34 +142,28 @@ function ModalWindow(props){
             }
      
             getImg(name).then(imageUrl => {
-               
-                props.setCounterKey(props.counterKey + 1)
-                props.setBookmarkArr(
-                [
-                    ...props.bookmarks,
-                    {key:props.counterKey, name: name, href: link, img: imageUrl}
-                ]);
-
-                inputNameRef.current.value = "";
-                inputLinkRef.current.value = "";
-                setLink("");
-                setNameLink("");
+                getNewBookmarks(props.counterKey, name, link, imageUrl);
             }).catch(error => {
+                getNewBookmarks(props.counterKey, name, link, name);
                 console.error('Не удалось получить изображение:', error);
-                props.setCounterKey(props.counterKey + 1)
-                props.setBookmarkArr(
-                [
-                    ...props.bookmarks,
-                    {key:props.counterKey, name: name, href: link, img: name}
-                ]);
-
-                inputNameRef.current.value = "";
-                inputLinkRef.current.value = "";
-                setLink("");
-                setNameLink("");
+               
             });
 
         }
+    }
+
+    function getNewBookmarks(key, name, href, img){
+        props.setCounterKey(props.counterKey + 1)
+        props.setBookmarkArr(
+        [
+            ...props.bookmarks,
+            {key:key, name: name, href: href, img: img}
+        ]);
+
+        inputNameRef.current.value = "";
+        inputLinkRef.current.value = "";
+        setLink("");
+        setNameLink("");
     }
     function getInputValueLink(e){
         setLink(e.target.value)   
