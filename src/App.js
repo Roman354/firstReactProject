@@ -37,6 +37,7 @@ function App() {
                     <Bookmarks 
                         bookmarks={bookmarkArr}
                         setBookmarkArr={setBookmarkArr}
+                        setCounterKey={setCounterKey}
                     />
                     <CreateBlock 
                         cb={handleClick}
@@ -51,6 +52,10 @@ function Bookmarks(props){
 
     function handleClick(key){
         props.setBookmarkArr(props.bookmarks.filter(a => a.key !== key))
+        if(props.bookmarks.length === 1)
+        {
+            props.setCounterKey(0);
+        }
     }
 
     function getListBookmark () {
@@ -63,7 +68,7 @@ function Bookmarks(props){
                     }}
                     className="Delete-bookmark">X</span>
                 <div className="Inscription-bookmark">
-                    <img src="img.png" alt="logo"></img>
+                    <img className="Img-bookmark" src={bookmark.img} alt={bookmark.name}></img>
                     <span className='Bookmarks-Name'>{bookmark.name}</span>
                 </div>
             </a>
@@ -97,14 +102,34 @@ function ModalWindow(props){
     
     function getDomainFromUrl(url) {
         try {
-            const parsedUrl = new URL(url);
-            return parsedUrl.hostname;
+            const hostname  = new URL(url).hostname;
+            const siteName = hostname.replace(/^www\./, '').split('.')[0];
+            return siteName;
         } catch (_) {
             return false;
         }
         
     }
-
+    async function getImg(requestWord){
+        const accessKey = 'bfs3AZiy96Dr00cW3P_XOhufG55FZDGkrLeyWev6VKY'; 
+        const url = `https://api.unsplash.com/search/photos?query=${requestWord}&client_id=${accessKey}`;
+        
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+        
+            if (data.results.length > 0) {
+              const imageUrl = `${data.results[0].urls.raw}&w=200&h=78&fit=crop`;
+              return imageUrl; 
+            } else {
+              throw new Error('Изображения не найдены');
+            }
+        } catch (error) {
+            console.error('Ошибка при загрузке изображения с Unsplash:', error);
+            throw error;
+        }
+        
+    }
     function handleClick(){
         if(link.length){
             let name = nameLink;
@@ -114,18 +139,35 @@ function ModalWindow(props){
                 inputNameRef.current.value = domain === false? link : domain;
                 name = inputNameRef.current.value;
             }
+     
+            getImg(name).then(imageUrl => {
+               
+                props.setCounterKey(props.counterKey + 1)
+                props.setBookmarkArr(
+                [
+                    ...props.bookmarks,
+                    {key:props.counterKey, name: name, href: link, img: imageUrl}
+                ]);
 
-            props.setCounterKey(props.counterKey + 1)
-            props.setBookmarkArr(
-            [
-                ...props.bookmarks,
-                {key:props.counterKey, name: name, href: link}
-            ]);
+                inputNameRef.current.value = "";
+                inputLinkRef.current.value = "";
+                setLink("");
+                setNameLink("");
+            }).catch(error => {
+                console.error('Не удалось получить изображение:', error);
+                props.setCounterKey(props.counterKey + 1)
+                props.setBookmarkArr(
+                [
+                    ...props.bookmarks,
+                    {key:props.counterKey, name: name, href: link, img: name}
+                ]);
 
-            inputNameRef.current.value = "";
-            inputLinkRef.current.value = "";
-            setLink("");
-            setNameLink("");
+                inputNameRef.current.value = "";
+                inputLinkRef.current.value = "";
+                setLink("");
+                setNameLink("");
+            });
+
         }
     }
     function getInputValueLink(e){
