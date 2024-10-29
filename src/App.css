@@ -38,6 +38,14 @@
   border-radius: 2px;
   
 }
+.Delete-modal{
+  width: 400px;
+  margin: 130px auto;
+  background: #e7e7e794;
+  border-radius: 7px;
+  padding: 15px;
+  font-size: 15px;
+}
 .Change-bookmark {
   display: none;
   position: absolute;
@@ -130,19 +138,41 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   justify-content: space-around;
 }
 .ButtonModal{
-  background: #4c8807;
+  background: #c6e5a2;
   width: 200px;
   height: 40px;
   border: none;
   box-shadow: inset 0px 0px 9px #c5b8a6;
   border-radius: 10px;
   font-size: 16px;
+  z-index: 3;
+  cursor: pointer;
 }
-.ButtonModal:hover{
+.Buttons-container{
+  display: flex;
+  justify-content: space-between;
+}
+.Delete-button, .Cancel-button{
+  background: #c6e5a2;
+  width: 180px;
+  height: 40px;
+  border: none;
+  box-shadow: inset 0px 0px 9px #c5b8a6;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.Delete-button{
+  background: #ed2020c9;
+}
+.Delete-button:hover{
+  font-size: 18px;
+  background: hsla(0, 89%, 48%, 0.788);
+}
+.ButtonModal:hover, .Cancel-button:hover{
   font-size: 18px;
   background: #67b709;
-  cursor: pointer;
-  z-index: 3;
+
 }
 .InputModal{
   width: auto;

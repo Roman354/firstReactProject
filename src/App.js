@@ -59,6 +59,24 @@ function App() {
 }
 
 function Bookmarks(props){
+    const [deleteModalFlag, setDeleteModalFlag] = useState(false);
+    const[key, setKey] = useState(null)
+
+    const deleteModal = 
+    <div className='ModalBackground'>
+        <div className='Delete-modal'>
+            <h2>Вы точно хотите удалить эту вкладку?</h2>
+            <div className='Buttons-container'>
+                <button onClick={()=>{
+                    handleClickDelete(key)
+                    setDeleteModalFlag(false)
+                    }} className="Delete-button">Удалить</button>
+                <button onClick={()=>{setDeleteModalFlag(false)}} className="Cancel-button">Отмена</button>
+            </div>
+        </div>
+    </div>
+    
+
     function handleClickDelete(key){
         props.setBookmarkArr(props.bookmarks.filter(a => a.key !== key))
         if(props.bookmarks.length === 1)
@@ -83,7 +101,9 @@ function Bookmarks(props){
                     <span 
                         onClick={(e)=>{
                             e.preventDefault()
-                            handleClickDelete(bookmark.key)
+                            setDeleteModalFlag(true)
+                            setKey(bookmark.key);
+                            // 
                         }}
                         className="Delete-bookmark">✕</span>
                 </div>
@@ -99,6 +119,7 @@ function Bookmarks(props){
     return(
        <>
         {list}
+        {deleteModalFlag? deleteModal : ""}
        </>
     )
 }
