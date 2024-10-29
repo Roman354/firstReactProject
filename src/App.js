@@ -1,21 +1,18 @@
 import './App.css';
-import React, {useState, useEffect, useRef}  from 'react';
+import React, {useState, useEffect , useRef}  from 'react';
 import useLocalStorage from "./useLocalStorage.js";
 import imgNotFound from '../src/imageNotFound.png';
-// const bookmarkArr = [
-//     {key:1, name:"Google", href:"https://www.google.ru/"},
-//     {key:2, name:"Youtube", href:"https://www.youtube.com/"},
-//     {key:3 , name:"Yandex", href:"https://ya.ru/"}
-// ]
 
 function App() {
-    const [CreateModalWindowFlag, setCreateModalWindowFlag] = useState(false);
+    const [createModalWindowFlag, setCreateModalWindowFlag] = useState(false);
+    const [changeModalWindowFlag, setChangeModalWindowFlag] = useState(false);
+    const [changeBookmark, setChangeBookmark] = useState(null);
     const [bookmarkArr, setBookmarkArr] = useLocalStorage("bookmarks",  []);
     const [counterKey, setCounterKey] = useState(()=>{
         return bookmarkArr.length > 0 ?  Math.max(...bookmarkArr.map(item => item.key)) + 1 : 0;
     });
 
-    function handleClick(){
+    function handleClickFlag(){
         setCreateModalWindowFlag(true);
     }
 
@@ -25,12 +22,21 @@ function App() {
             <CreateModalWindow 
                 counterKey={counterKey}
                 setCounterKey={setCounterKey}
-                flag={CreateModalWindowFlag}
+                flag={createModalWindowFlag}
                 bookmarks={bookmarkArr}
                 setBookmarkArr={setBookmarkArr}
                 cb={()=>{
                     setCreateModalWindowFlag(false)
                 }}
+            />
+            <ChangeModalWindow 
+                flag={changeModalWindowFlag}
+                cb={()=>{
+                    setChangeModalWindowFlag(false)
+                }}
+                bookmarks={bookmarkArr}
+                setBookmarkArr={setBookmarkArr}
+                bookmarkKey={changeBookmark}
             />
             <header className="App-header">
                 <div className="Page-container">
@@ -38,9 +44,13 @@ function App() {
                         bookmarks={bookmarkArr}
                         setBookmarkArr={setBookmarkArr}
                         setCounterKey={setCounterKey}
+                        setChangeBookmark={setChangeBookmark}
+                        cb={()=>{
+                            setChangeModalWindowFlag(true)
+                        }}
                     />
                     <CreateBlock 
-                        cb={handleClick}
+                        cb={handleClickFlag}
                     />
                 </div>
             </header>
@@ -49,14 +59,14 @@ function App() {
 }
 
 function Bookmarks(props){
-    function handleClick(key){
+    function handleClickDelete(key){
         props.setBookmarkArr(props.bookmarks.filter(a => a.key !== key))
         if(props.bookmarks.length === 1)
         {
             props.setCounterKey(0);
         }
     }
-
+   
     function getListBookmark () {
         return props.bookmarks.map(bookmark => 
             <a className="Link-bookmark" key={bookmark.key} target="_blank" rel="noreferrer" href={bookmark.href}>
@@ -64,7 +74,16 @@ function Bookmarks(props){
                     <span 
                         onClick={(e)=>{
                             e.preventDefault()
-                            handleClick(bookmark.key)
+                            props.setChangeBookmark(bookmark.key)
+                            props.cb()
+                        }}
+                        className="Change-bookmark">✏️</span>
+                </div>
+                <div>
+                    <span 
+                        onClick={(e)=>{
+                            e.preventDefault()
+                            handleClickDelete(bookmark.key)
                         }}
                         className="Delete-bookmark">✕</span>
                 </div>
@@ -131,7 +150,7 @@ function CreateModalWindow(props){
         
     }
 
-    function handleClick(){
+    function handleClickCreate(){
         if(link.length){
             let name = nameLink;
             if(!nameLink.length)
@@ -164,6 +183,7 @@ function CreateModalWindow(props){
         setLink("");
         setNameLink("");
     }
+
     function getInputValueLink(e){
         setLink(e.target.value)   
     }
@@ -204,7 +224,7 @@ function CreateModalWindow(props){
                         className='InputModal' type="text" placeholder="Google"></input>
                 </div>
                     <button onClick={() => {
-                        handleClick();
+                        handleClickCreate();
                         props.cb();
                     }
                     } className='ButtonModal'>Добавить</button>
@@ -214,35 +234,37 @@ function CreateModalWindow(props){
 }
 
 function ChangeModalWindow(props){
-    const [link, setLink] = useState("");
-    const [nameLink, setNameLink] = useState("");
+
+    const element = props.bookmarks.find(a => a.key === props.bookmarkKey);
+    const [link, setLink] = useState(element? element.href : "");
+    const [nameLink, setNameLink] = useState(element? element.name : "");
+
+    useEffect(()=>{
+        if(element)
+        {
+            setLink(element.href)
+            setNameLink(element.name)
+        }
+      
+    }, [props.bookmarkKey, element])
+
     const inputLinkRef = useRef(null);
     const inputNameRef = useRef(null);
-    
-    function handleClick(){
-        // if(link.length){
-            // let name = nameLink;
-            // if(!nameLink.length)
-            // {
-            //     let domain = getDomainFromUrl(link);
-            //     inputNameRef.current.value = domain === false? link : domain;
-            //     name = inputNameRef.current.value;
-            // }
-     
-            // getImg(name).then(imageUrl => {
-            //     // getNewBookmarks(props.counterKey, name, link, imageUrl);
-            // }).catch(error => {
-            //     // getNewBookmarks(props.counterKey, name, link, imgNotFound);
-            //     console.error('Не удалось получить изображение:', error);
-               
-            // });
 
-        // }
+    function handleClickChange(key, updatedFields){
+        props.setBookmarkArr(prevArr => 
+            prevArr.map(item => 
+                item.key === key ? { ...item, ...updatedFields } : item
+            )
+          );
+       
+        props.cb();
     }
 
     function getInputValueLink(e){
         setLink(e.target.value)   
     }
+    
     function getInputValueNameLink(e){
         setNameLink(e.target.value);
     }
@@ -255,10 +277,11 @@ function ChangeModalWindow(props){
                 onClick={(e) => {
                     e.stopPropagation();
                 }}>
-                <span>Добавить Закладку</span>
+                <span>Изменить Закладку</span>
                 <div className='ModalFlex'>
                     <span>Ссылка на страницу:</span>
                     <input 
+                        value={link}
                         ref={inputLinkRef}
                         onChange={getInputValueLink}
                         className='InputModal'
@@ -270,15 +293,16 @@ function ChangeModalWindow(props){
                         Название(не обязательно):
                     </span>
                     <input 
+                        value={nameLink}
                         ref={inputNameRef}
                         onChange={getInputValueNameLink}
                         className='InputModal' type="text" placeholder="Google"></input>
                 </div>
                     <button onClick={() => {
-                        handleClick();
-                        props.cb();
+                        handleClickChange(props.bookmarkKey, {name: nameLink, href: link});
+                      
                     }
-                    } className='ButtonModal'>Добавить</button>
+                    } className='ButtonModal'>Изменить</button>
             </div>
         </div>
     )
