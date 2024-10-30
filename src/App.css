@@ -1,15 +1,14 @@
-.App-header {
-
+.Main-container {
+  overflow: hidden;
+  position: relative;
   min-height: 100vh;
- 
-  background: url("/img/background.jpeg") no-repeat center center;
+  background: no-repeat center center;
   background-size: cover;
 }
 
 .Inscription-bookmark{
   width: 200px;
   height: 100px;
-  /* background: #b7b6b6; */
   box-shadow: inset 1px 1px 6px #0c0c0c;
   flex-direction: column;
   display: flex;
@@ -24,6 +23,8 @@
 }
 
 .Create-block{
+  position: relative;
+
   cursor: pointer;
 }
 .Delete-bookmark{
@@ -62,8 +63,22 @@
   opacity: 1;
 }
 a.Link-bookmark:hover, .Create-block:hover{
-  
+  background: #16161669;
   transform: scale(1.1);
+}
+.Plus-create{
+  position: absolute;
+  top: 10px;
+  width: 35px;
+  height: 32px;
+ 
+  font-size: 50px;
+  color: #fff;
+  font-weight: 400;
+  transition-duration:0.5s;
+}
+.Create-block:hover .Plus-create{
+  color:#67b709
 }
 a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   display: block;
@@ -84,7 +99,7 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
 
   gap: 10px 20px;
   align-items: baseline;
-  padding: 10%;
+  padding: 7% 9%;
   justify-content: flex-start;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -94,6 +109,7 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   height: 78px;
 }
 .ClockDiv{
+  z-index: 1;
   position: absolute;
   color: white;
   padding: 5px 10px;
@@ -178,4 +194,60 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   width: auto;
   height: 25px;
   border-radius: 8px;
+}
+
+.Board-container{
+  transition: right 1s ease;
+  display: flex;
+  align-items: center;
+  top: 9%;
+  right: -88%;
+  width: 90%;
+  height: 80vh;
+  position: absolute;
+}
+.Board-handle{
+  width: 40px;
+  height: 40px;
+  
+  background:url("./switch.png") no-repeat center center;
+  background-size: cover;
+  rotate: -90deg;
+}
+.Board-content{
+  width: calc(100% - 40px);
+  height: 100%;
+  background-image: url("./tekstura-doski.jpg");
+  border-radius: 10px;
+
+}
+.Board-container.visible {
+  right: 0;
+
+}
+.Board-handle.visible{
+  transform: scale(-1, 1);
+}
+.Button-change-background{
+  background: #c6e5a2;
+  width: 100px;
+  height: 30px;
+  border: none;
+  box-shadow: inset 0px 0px 9px #c5b8a6;
+  border-radius: 10px;
+  font-size: 15px;
+ 
+  cursor: pointer;
+  
+}
+.Button-change-background:hover{
+  /* font-size: 16px; */
+  background: #67b709;
+
+}
+.Board-content input{
+  height: 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  margin-right: 5px;
 }
