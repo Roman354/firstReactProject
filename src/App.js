@@ -11,7 +11,8 @@ function App() {
     const [changeBookmark, setChangeBookmark] = useState(null);
     const [bookmarkArr, setBookmarkArr] = useLocalStorage("bookmarks",  []);
     // const backgroundImage = defaultBackground;
-    const [backgroundImage, setBackgroundImage] = useState(defaultBackground);
+
+    const [backgroundImage, setBackgroundImage] = useLocalStorage("boardImg",  defaultBackground);
     const [counterKey, setCounterKey] = useState(()=>{
         return bookmarkArr.length > 0 ?  Math.max(...bookmarkArr.map(item => item.key)) + 1 : 0;
     });
