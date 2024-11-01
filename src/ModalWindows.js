@@ -71,7 +71,6 @@ export function CreateModalWindow(props){
         setLink("");
         setNameLink("");
     }
-
     function getInputValueLink(e){
         setLink(e.target.value)   
     }

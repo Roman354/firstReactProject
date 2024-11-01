@@ -203,7 +203,7 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   top: 9%;
   right: -88%;
   width: 90%;
-  height: 80vh;
+  height: 80%;
   position: absolute;
 }
 .Board-handle{
@@ -220,7 +220,7 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   border-radius: 10px;
   background: url("./board.jpg") no-repeat center center;
   background-size: cover;
-
+  overflow: hidden; 
 }
 .Board-container.visible {
   right: 0;
@@ -270,12 +270,19 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   background-color: #7b7860;
   border-radius: 2px;
 }
-.container-note{
-  position: absolute;
-  right: 0;
-  border: 2px solid #333;
-  width: calc(100% - 40px);
-  height: 100%;
-  overflow: hidden; 
+.delete-note-button{
 
+  cursor: pointer;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  opacity: 0.5;
+  color: rgb(255, 255, 255);
+  background: red;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.delete-note-button:hover{
+  opacity: 1;
 }
