@@ -4,9 +4,10 @@ import useLocalStorage from "./useLocalStorage.js";
 export default function Board(props){
     const boardHandle = useRef(null);
     const boardSwitch = useRef(null);
-    const [arrNotes, setArrNotes] = useLocalStorage("listNotes", [
-
-    ])
+    const [arrNotes, setArrNotes] = useLocalStorage("listNotes", [])
+    const [counterKey, setCounterKey] = useState(()=>{
+        return arrNotes.length > 0 ?  Math.max(...arrNotes.map(item => item.key)) + 1 : 0;
+    });
    
     const inputChangeBackground = useRef(null);
 
@@ -47,8 +48,7 @@ export default function Board(props){
                 arrNotes={arrNotes}
                 setArrNotes={setArrNotes}
                 refBoard={boardHandle}
-                // text={note.text}
-                // position={{x: Math.max(40, Math.min(note.position.x, window.innerWidth*0.9 - 220)), y: Math.max(0, Math.min(note.position.y, window.innerHeight*0.8 - 140))}} //
+               
                 id={note.key}
                 key={note.key}
             />
@@ -67,6 +67,12 @@ export default function Board(props){
                     }}>
                         Применить
                 </button>
+                <CreateNote 
+                    counterKey={counterKey}
+                    setCounterKey={setCounterKey}
+                    arrNotes={arrNotes}
+                    setArrNotes={setArrNotes}
+                />
                 {getListNotes()}
             </div>
           
@@ -75,28 +81,27 @@ export default function Board(props){
     
 }
 
-
-
 function Note(props) {
     const noteInf = props.arrNotes.filter(a => a.key === props.id)[0];
     const textRef = useRef(noteInf.text);
     const [position, setPosition] = useState({ x: noteInf.position.x, y: noteInf.position.y });
-    let timeout;
+ 
     let dragStartOffset = { x: 0, y: 0 };
     const noteRef = useRef(null); 
     const textNoteRef = useRef(null); 
-    
+    // let timeout;
 
     function handleTextChange () {
+    
         textRef.current = textNoteRef.current.innerText;
-        clearTimeout(timeout);
-        timeout = setTimeout(function() {
-            props.setArrNotes(prevArr => 
-                prevArr.map(item => 
-                    item.key === noteInf.key ? { ...item, text: textNoteRef.current.innerText } : item
-                )
-            );
-        }, 1000); 
+        // clearTimeout(timeout);
+        // timeout = setTimeout(function() {
+        props.setArrNotes(prevArr => 
+            prevArr.map(item => 
+                item.key === noteInf.key ? { ...item, text: textNoteRef.current.innerText } : item
+            )
+        );
+        // }, 2000); 
     };
 
     function handleMouseDown (e){
@@ -136,7 +141,7 @@ function Note(props) {
 
         props.setArrNotes(prevArr => 
             prevArr.map(item => 
-                item.key === noteInf.key ? { ...item, position:{x: position.x, y:position.y} } : item
+                item.key === noteInf.key ? { ...item, position:{x: noteRect.left - containerRect.left, y:noteRect.top - containerRect.top} } : item
             )
         );
        
@@ -144,12 +149,26 @@ function Note(props) {
         window.removeEventListener('mouseup', handleMouseUp);
     };
   
-    function deleteList(){
+    function deleteNote(){
         props.setArrNotes(props.arrNotes.filter(a => a.key !== noteInf.key))
         // if(props.bookmarks.length === 1)
         // {
         //     props.setCounterKey(0);
         // }
+    }
+    function changeNote(){
+        if(textNoteRef.current.contentEditable === "true")
+        {
+            textNoteRef.current.classList.remove("change")
+            
+            handleTextChange();
+            textNoteRef.current.contentEditable = "false";
+        }
+        else{
+            textNoteRef.current.contentEditable = "true";
+            textNoteRef.current.classList.add("change")
+        }
+    
     }
     return (
         <div 
@@ -160,17 +179,42 @@ function Note(props) {
                 top: `${position.y}px`,
                 left: `${position.x}px`,
             }}>
+         
             <div className="note-mover"onMouseDown={handleMouseDown}>
-                <button className="delete-note-button"onClick={deleteList}>✕</button>
+                <button className="change-note-button"onClick={changeNote}>✏️</button>
+                <button className="delete-note-button"onClick={deleteNote}>✕</button>
             </div>
             <div
                 ref={textNoteRef}
                 className="note"
-                contentEditable="true"
+                contentEditable="false"
                 suppressContentEditableWarning={true}
-                onInput={handleTextChange}>
+                // onInput={handleTextChange}
+                >
                 {textRef.current}
             </div>
         </div>
     );
-  };
+};
+
+function CreateNote(props)
+{
+    // counterKey={counterKey}
+    // setCounterKey={setCounterKey}
+    function createNewNote(){
+        // props.setCounterKey(props.counterKey + 1)
+        props.setArrNotes(
+        [
+            ...props.arrNotes,
+            {"text":"","position":{"x":1508,"y":0}, "key": props.counterKey}
+        ]);
+        props.setCounterKey(props.counterKey + 1)
+    }
+    return(
+        <button 
+            onClick={createNewNote}
+            className='create-note-button'>
+            +
+        </button>
+    )
+}
