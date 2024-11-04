@@ -6,7 +6,7 @@ export function CreateModalWindow(props){
     const [nameLink, setNameLink] = useState("");
     const inputLinkRef = useRef(null);
     const inputNameRef = useRef(null);
-    
+    const inputLoadImg = useRef(null);
     function getDomainFromUrl(url) {
         try {
             const hostname  = new URL(url).hostname;
@@ -20,22 +20,23 @@ export function CreateModalWindow(props){
     async function getImg(requestWord){
         const accessKey = 'bfs3AZiy96Dr00cW3P_XOhufG55FZDGkrLeyWev6VKY'; 
         const url = `https://api.unsplash.com/search/photos?query=${requestWord}&client_id=${accessKey}`;
-        
+    
         try {
             const response = await fetch(url);
             const data = await response.json();
         
             if (data.results.length > 0) {
-              const imageUrl = `${data.results[0].urls.raw}&w=200&h=78&fit=crop`;
-              return imageUrl; 
+            const imageUrl = `${data.results[0].urls.raw}&w=200&h=78&fit=crop`;
+            return imageUrl; 
             } else {
-              throw new Error('Изображения не найдены');
+            throw new Error('Изображения не найдены');
             }
         } catch (error) {
             console.error('Ошибка при загрузке изображения с Unsplash:', error);
             throw error;
         }
         
+           
     }
 
     function handleClickCreate(){
@@ -47,14 +48,37 @@ export function CreateModalWindow(props){
                 inputNameRef.current.value = domain === false? link : domain;
                 name = inputNameRef.current.value;
             }
-     
-            getImg(name).then(imageUrl => {
-                getNewBookmarks(props.counterKey, name, link, imageUrl);
-            }).catch(error => {
-                getNewBookmarks(props.counterKey, name, link, imgNotFound);
-                console.error('Не удалось получить изображение:', error);
+
+            console.log(inputLoadImg.current.value)
+            if(inputLoadImg.current.value === ""){
+
+ 
+
+                getImg(name).then(imageUrl => {
+                    getNewBookmarks(props.counterKey, name, link, imageUrl);
+                }).catch(error => {
+                    getNewBookmarks(props.counterKey, name, link, imgNotFound);
+                    console.error('Не удалось получить изображение:', error);
+                   
+                });
+            }else
+            {
+                const file = inputLoadImg.current.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        getNewBookmarks(props.counterKey, name, link, reader.result);
+                    
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert("Пожалуйста, выберите файл изображения.");
+                }
+                inputLoadImg.current.value = "";
+        
                
-            });
+            }
+            
 
         }
     }
@@ -77,44 +101,52 @@ export function CreateModalWindow(props){
     function getInputValueNameLink(e){
         setNameLink(e.target.value);
     }
+  
     return(
-        <div onMouseDown={()=>{
-            setLink("");
-            setNameLink("");
-            inputNameRef.current.value = "";
-            inputLinkRef.current.value = "";
-            props.cb();
-        }}
-            className={props.flag ? "ModalBackground" : "ModalBackground disable"}>
-            <div className="ModalContainer" 
+        <div
+            className={props.flag ? "modal-background" : "modal-background disable"} 
+            onMouseDown={ () => {
+                setLink("");
+                setNameLink("");
+                inputNameRef.current.value = "";
+                inputLinkRef.current.value = "";
+                props.cb();
+            }}
+        >
+            <div className="modal-container" 
                 onMouseDown={(e) => {
                     e.stopPropagation();
                 }}
             >
-                    <span>Добавить Закладку</span>
-                <div className='ModalFlex'>
+                <span>Добавить Закладку</span>
+                <div className='modal-flex'>
                     <span>Ссылка на страницу:</span>
                     <input 
                         ref={inputLinkRef}
                         onChange={getInputValueLink}
-                        className='InputModal'
+                        className='input-modal'
                         type="text"
-                        placeholder="https://google.com/"></input>
+                        placeholder="https://google.com/">
+                    </input>
                 </div>
-                <div className='ModalFlex'>
+                <div className='modal-flex'>
                     <span>
                         Название(не обязательно):
                     </span>
                     <input 
                         ref={inputNameRef}
                         onChange={getInputValueNameLink}
-                        className='InputModal' type="text" placeholder="Google"></input>
+                        className='input-modal' type="text" placeholder="Google">
+                    </input>
                 </div>
-                    <button onClick={() => {
-                        handleClickCreate();
-                        props.cb();
-                    }
-                    } className='ButtonModal'>Добавить</button>
+                <button  
+                    className='button-modal'
+                    onClick={() => {
+                            handleClickCreate();
+                            props.cb();
+                    }}
+                >Добавить</button>
+                <input className='input-load-img' ref={inputLoadImg} type='file' name='file' accept='image/*'></input>
             </div>
         </div>
     )
@@ -124,12 +156,13 @@ export function ChangeModalWindow(props){
     const element = props.bookmarks.find(a => a.key === props.bookmarkKey);
     const [link, setLink] = useState(element? element.href : "");
     const [nameLink, setNameLink] = useState(element? element.name : "");
-
+    const inputLoadImg = useRef(null);
     useEffect(()=>{
         if(element)
         {
             setLink(element.href)
             setNameLink(element.name)
+           
         }
       
     }, [props.bookmarkKey, element])
@@ -137,12 +170,28 @@ export function ChangeModalWindow(props){
     const inputLinkRef = useRef(null);
     const inputNameRef = useRef(null);
 
-    function handleClickChange(key, updatedFields){
-        props.setBookmarkArr(prevArr => 
-            prevArr.map(item => 
-                item.key === key ? { ...item, ...updatedFields } : item
-            )
-          );
+    function handleClickChange(key){
+
+        const file = inputLoadImg.current.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                props.setBookmarkArr(prevArr => 
+                    prevArr.map(item => 
+                        item.key === key ? { ...item, ...{name: nameLink, href: link, img:reader.result} } : item
+                    )
+                );
+
+            };
+            reader.readAsDataURL(file);
+        } else {
+            props.setBookmarkArr(prevArr => 
+                prevArr.map(item => 
+                    item.key === key ? { ...item, ...{name: nameLink, href: link} } : item
+                )
+              );
+        }
+        
        
         props.cb();
     }
@@ -158,23 +207,23 @@ export function ChangeModalWindow(props){
         <div onMouseDown={()=>{
             props.cb();
         }}
-            className={props.flag ? "ModalBackground" : "ModalBackground disable"}>
-            <div className="ModalContainer" 
+            className={props.flag ? "modal-background" : "modal-background disable"}>
+            <div className="modal-container" 
                 onMouseDown={(e) => {
                     e.stopPropagation();
                 }}>
                 <span>Изменить Закладку</span>
-                <div className='ModalFlex'>
+                <div className='modal-flex'>
                     <span>Ссылка на страницу:</span>
                     <input 
                         value={link}
                         ref={inputLinkRef}
                         onChange={getInputValueLink}
-                        className='InputModal'
+                        className='input-modal'
                         type="text"
                         placeholder="https://google.com/"></input>
                 </div>
-                <div className='ModalFlex'>
+                <div className='modal-flex'>
                     <span>
                         Название(не обязательно):
                     </span>
@@ -182,13 +231,14 @@ export function ChangeModalWindow(props){
                         value={nameLink}
                         ref={inputNameRef}
                         onChange={getInputValueNameLink}
-                        className='InputModal' type="text" placeholder="Google"></input>
+                        className='input-modal' type="text" placeholder="Google"></input>
                 </div>
                     <button onClick={() => {
-                        handleClickChange(props.bookmarkKey, {name: nameLink, href: link});
+                        handleClickChange(props.bookmarkKey);
                       
                     }
-                    } className='ButtonModal'>Изменить</button>
+                    } className='button-modal'>Изменить</button>
+                    <input className='input-load-img' ref={inputLoadImg} type='file' name='file' accept='image/*'></input>
             </div>
         </div>
     )

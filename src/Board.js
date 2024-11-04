@@ -56,12 +56,12 @@ export default function Board(props){
     }
   
     return(
-        <div ref={boardHandle} className="Board-container">
-            <div ref={boardSwitch} onClick={pullsOutTheBoard} className='Board-handle'></div>
-            <div className='Board-content'>
+        <div ref={boardHandle} className="board-container">
+            <div ref={boardSwitch} onClick={pullsOutTheBoard} className='board-handle'></div>
+            <div className='board-content'>
                 <input ref={inputChangeBackground}></input>
                 <button
-                    className='Button-change-background' 
+                    className='button-change-background' 
                     onClick={()=>{
                         changeBackground(inputChangeBackground.current.value)
                     }}>
@@ -89,19 +89,14 @@ function Note(props) {
     let dragStartOffset = { x: 0, y: 0 };
     const noteRef = useRef(null); 
     const textNoteRef = useRef(null); 
-    // let timeout;
 
     function handleTextChange () {
-    
         textRef.current = textNoteRef.current.innerText;
-        // clearTimeout(timeout);
-        // timeout = setTimeout(function() {
         props.setArrNotes(prevArr => 
             prevArr.map(item => 
                 item.key === noteInf.key ? { ...item, text: textNoteRef.current.innerText } : item
             )
         );
-        // }, 2000); 
     };
 
     function handleMouseDown (e){
@@ -151,22 +146,18 @@ function Note(props) {
   
     function deleteNote(){
         props.setArrNotes(props.arrNotes.filter(a => a.key !== noteInf.key))
-        // if(props.bookmarks.length === 1)
-        // {
-        //     props.setCounterKey(0);
-        // }
     }
     function changeNote(){
         if(textNoteRef.current.contentEditable === "true")
         {
-            textNoteRef.current.classList.remove("change")
+            textNoteRef.current.classList.remove("change");
             
             handleTextChange();
             textNoteRef.current.contentEditable = "false";
         }
         else{
             textNoteRef.current.contentEditable = "true";
-            textNoteRef.current.classList.add("change")
+            textNoteRef.current.classList.add("change");
         }
     
     }
@@ -189,7 +180,6 @@ function Note(props) {
                 className="note"
                 contentEditable="false"
                 suppressContentEditableWarning={true}
-                // onInput={handleTextChange}
                 >
                 {textRef.current}
             </div>
@@ -199,10 +189,8 @@ function Note(props) {
 
 function CreateNote(props)
 {
-    // counterKey={counterKey}
-    // setCounterKey={setCounterKey}
     function createNewNote(){
-        // props.setCounterKey(props.counterKey + 1)
+    
         props.setArrNotes(
         [
             ...props.arrNotes,

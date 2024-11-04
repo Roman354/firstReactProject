@@ -1,4 +1,4 @@
-.Main-container {
+.main-container {
   overflow: hidden;
   position: relative;
   min-height: 100vh;
@@ -6,7 +6,7 @@
   background-size: cover;
 }
 
-.Inscription-bookmark{
+.inscription-bookmark{
   width: 200px;
   height: 100px;
   box-shadow: inset 1px 1px 6px #0c0c0c;
@@ -17,17 +17,17 @@
 
 
 }
-.Link-bookmark{
+.link-bookmark{
   position: relative;
   text-decoration: none;
 }
 
-.Create-block{
+.create-block{
   position: relative;
 
   cursor: pointer;
 }
-.Delete-bookmark{
+.delete-bookmark{
   display: none;
   position: absolute;
   right: 1px;
@@ -39,7 +39,7 @@
   border-radius: 2px;
   
 }
-.Delete-modal{
+.delete-modal{
   width: 400px;
   margin: 130px auto;
   background: #e7e7e794;
@@ -47,7 +47,7 @@
   padding: 15px;
   font-size: 15px;
 }
-.Change-bookmark {
+.change-bookmark {
   display: none;
   position: absolute;
   left: 1px;
@@ -58,15 +58,15 @@
   border-radius: 2px;
 }
 
-.Delete-bookmark:hover, .Change-bookmark:hover{
+.delete-bookmark:hover, .change-bookmark:hover{
   transform: scale(1.1);
   opacity: 1;
 }
-a.Link-bookmark:hover, .Create-block:hover{
+a.link-bookmark:hover, .create-block:hover{
   background: #16161669;
   transform: scale(1.1);
 }
-.Plus-create{
+.plus-create{
   position: absolute;
   top: 10px;
   width: 35px;
@@ -77,14 +77,14 @@ a.Link-bookmark:hover, .Create-block:hover{
   font-weight: 400;
   transition-duration:0.5s;
 }
-.Create-block:hover .Plus-create{
+.create-block:hover .plus-create{
   color:#67b709
 }
-a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
+a.link-bookmark:hover .delete-bookmark,a.link-bookmark:hover .change-bookmark{
   display: block;
  
 }
-.Bookmarks-Name{
+.bookmarks-Name{
   overflow: hidden;
   width: 100%;
   text-align: center;
@@ -93,7 +93,7 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   border-radius: 4px;
   height: 22px;
 }
-.Page-container{
+.page-container{
   display: flex;
   height:100%;
 
@@ -104,11 +104,13 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   flex-wrap: wrap;
   align-items: flex-start;
 }
-.Img-bookmark{
-  width: 200px;
-  height: 78px;
+.img-bookmark{
+  max-width: 100%;
+  max-height: 77px;
+  background: no-repeat center;
+  background-size: cover;
 }
-.ClockDiv{
+.clock-div{
   z-index: 1;
   position: absolute;
   color: white;
@@ -119,10 +121,10 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   font-size: 18px;
   font-weight: 600;
 }
-.ClockDiv p{
+.clock-div p{
   display: inline;
 }
-.ModalContainer{
+.modal-container{
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -136,7 +138,7 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   width: 20%;
   z-index: 2;
 }
-.ModalBackground{
+.modal-background{
     top: 0;
     left: 0;
     position: absolute;
@@ -148,12 +150,12 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
 .disable{
   display: none;
 }
-.ModalFlex{
+.modal-flex{
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
-.ButtonModal{
+.button-modal{
   background: #c6e5a2;
   width: 200px;
   height: 40px;
@@ -164,11 +166,11 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   z-index: 3;
   cursor: pointer;
 }
-.Buttons-container{
+.buttons-container{
   display: flex;
   justify-content: space-between;
 }
-.Delete-button, .Cancel-button{
+.delete-button, .cancel-button{
   background: #c6e5a2;
   width: 180px;
   height: 40px;
@@ -178,25 +180,25 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   font-size: 16px;
   cursor: pointer;
 }
-.Delete-button{
+.delete-button{
   background: #ed2020c9;
 }
-.Delete-button:hover{
+.delete-button:hover{
   font-size: 18px;
   background: hsla(0, 89%, 48%, 0.788);
 }
-.ButtonModal:hover, .Cancel-button:hover{
+.button-modal:hover, .cancel-button:hover{
   font-size: 18px;
   background: #67b709;
 
 }
-.InputModal{
+.input-modal{
   width: auto;
   height: 25px;
   border-radius: 8px;
 }
 
-.Board-container{
+.board-container{
   transition: right 1s ease;
   display: flex;
   align-items: center;
@@ -206,7 +208,7 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   height: 80%;
   position: absolute;
 }
-.Board-handle{
+.board-handle{
   width: 40px;
   height: 40px;
   
@@ -214,7 +216,7 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   background-size: cover;
   rotate: -90deg;
 }
-.Board-content{
+.board-content{
   width: calc(100% - 40px);
   height: 100%;
   border-radius: 10px;
@@ -222,14 +224,14 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   background-size: cover;
   overflow: hidden; 
 }
-.Board-container.visible {
+.board-container.visible {
   right: 0;
 
 }
-.Board-handle.visible{
+.board-handle.visible{
   transform: scale(-1, 1);
 }
-.Button-change-background{
+.button-change-background{
   background: #c6e5a2;
   width: 100px;
   height: 30px;
@@ -237,15 +239,12 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   box-shadow: inset 0px 0px 9px #c5b8a6;
   border-radius: 10px;
   font-size: 15px;
- 
   cursor: pointer;
-  
 }
-.Button-change-background:hover{
+.button-change-background:hover{
   background: #67b709;
-
 }
-.Board-content input{
+.board-content input{
   height: 20px;
   font-size: 16px;
   border-radius: 5px;
@@ -316,4 +315,26 @@ a.Link-bookmark:hover .Delete-bookmark,a.Link-bookmark:hover .Change-bookmark{
   font-size: 29px;
   height: 40px;
   color: black;
+}
+.input-load-img{
+  display: block;
+  margin: 20px 0;
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: 2px solid #000000;
+  border-radius: 5px;
+  cursor: pointer; 
+  font-size: 16px; 
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+.input-load-img:hover{
+  background-color: #5ccd61;
+  border-color: #f6fbf7;
+  color: #0c0c0c;
+}
+
+.input-load-img::-webkit-file-upload-button {
+  display: none;
+  /* visibility: hidden; */
 }

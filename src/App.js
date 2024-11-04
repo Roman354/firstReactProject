@@ -10,7 +10,6 @@ function App() {
     const [changeModalWindowFlag, setChangeModalWindowFlag] = useState(false);
     const [changeBookmark, setChangeBookmark] = useState(null);
     const [bookmarkArr, setBookmarkArr] = useLocalStorage("bookmarks",  []);
-    // const backgroundImage = defaultBackground;
 
     const [backgroundImage, setBackgroundImage] = useLocalStorage("boardImg",  defaultBackground);
     const [counterKey, setCounterKey] = useState(()=>{
@@ -26,7 +25,7 @@ function App() {
         <header>
             <Clock />
         </header>
-        <main className="Main-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
+        <main className="main-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
             <CreateModalWindow 
                 counterKey={counterKey}
                 setCounterKey={setCounterKey}
@@ -47,7 +46,7 @@ function App() {
                 bookmarkKey={changeBookmark}
             />
           
-                <div className="Page-container">
+                <div className="page-container">
                     <Bookmarks 
                         bookmarks={bookmarkArr}
                         setBookmarkArr={setBookmarkArr}
@@ -74,15 +73,15 @@ function Bookmarks(props){
     const [key, setKey] = useState(null);
 
     const deleteModal = 
-    <div className='ModalBackground'>
-        <div className='Delete-modal'>
+    <div className='modal-background'>
+        <div className='delete-modal'>
             <h2>Вы точно хотите удалить эту вкладку?</h2>
-            <div className='Buttons-container'>
+            <div className='buttons-container'>
                 <button onClick={()=>{
                     handleClickDelete(key)
                     setDeleteModalFlag(false)
-                    }} className="Delete-button">Удалить</button>
-                <button onClick={()=>{setDeleteModalFlag(false)}} className="Cancel-button">Отмена</button>
+                    }} className="delete-button">Удалить</button>
+                <button onClick={()=>{setDeleteModalFlag(false)}} className="cancel-button">Отмена</button>
             </div>
         </div>
     </div>
@@ -98,7 +97,7 @@ function Bookmarks(props){
    
     function getListBookmark () {
         return props.bookmarks.map(bookmark => 
-            <a className="Link-bookmark" key={bookmark.key} target="_blank" rel="noreferrer" href={bookmark.href}>
+            <a className="link-bookmark" key={bookmark.key} target="_blank" rel="noreferrer" href={bookmark.href}>
                 <div>
                     <span 
                         onClick={(e)=>{
@@ -106,7 +105,7 @@ function Bookmarks(props){
                             props.setChangeBookmark(bookmark.key)
                             props.cb()
                         }}
-                        className="Change-bookmark">✏️</span>
+                        className="change-bookmark">✏️</span>
                 </div>
                 <div>
                     <span 
@@ -116,11 +115,11 @@ function Bookmarks(props){
                             setKey(bookmark.key);
                             // 
                         }}
-                        className="Delete-bookmark">✕</span>
+                        className="delete-bookmark">✕</span>
                 </div>
-                <div className="Inscription-bookmark">
-                    <img className="Img-bookmark" src={bookmark.img} alt={bookmark.name}></img>
-                    <span className='Bookmarks-Name'>{bookmark.name}</span>
+                <div className="inscription-bookmark">
+                    <img className="img-bookmark" src={bookmark.img} alt={bookmark.name}></img>
+                    <span className='bookmarks-Name'>{bookmark.name}</span>
                 </div>
             </a>
         );
@@ -139,9 +138,9 @@ function CreateBlock(props){
     return(
         <div 
             onClick={props.cb}
-            className="Inscription-bookmark Create-block">
-                <div className='Plus-create'>+</div>
-                <span className='Bookmarks-Name'>Создать</span>
+            className="inscription-bookmark create-block">
+                <div className='plus-create'>+</div>
+                <span className='bookmarks-Name'>Создать</span>
         </div>
     )
 }
@@ -162,7 +161,7 @@ function Clock (){
     const timeString = `${hours}:${minutes}:${seconds}`;
 
     return(
-        <div className="ClockDiv">
+        <div className="clock-div">
             <p>{timeString}</p>
         </div>
     )
