@@ -8,8 +8,7 @@ export default function Board(props){
     const [counterKey, setCounterKey] = useState(()=>{
         return arrNotes.length > 0 ?  Math.max(...arrNotes.map(item => item.key)) + 1 : 0;
     });
-   
-    const inputChangeBackground = useRef(null);
+ 
 
     function pullsOutTheBoard(){
         boardHandle.current.classList.toggle("visible");
@@ -21,25 +20,7 @@ export default function Board(props){
         // ])
     }
     
-    async function changeBackground(query){
-        const accessKey = 'bfs3AZiy96Dr00cW3P_XOhufG55FZDGkrLeyWev6VKY'; 
-        const url = `https://api.unsplash.com/search/photos?query=${query}&client_id=${accessKey}`;
-        
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-        
-            if (data.results.length > 0) {
-              const imageUrl = `${data.results[0].urls.raw}&w=${window.screen.width}&h=${window.screen.height}&fit=crop`;
-              props.setBackgroundImage(imageUrl);
-            } else {
-              throw new Error('Изображения не найдены');
-            }
-        } catch (error) {
-            console.error('Ошибка при загрузке изображения с Unsplash:', error);
-            throw error;
-        }
-    }
+   
 
     function getListNotes () {
 
@@ -59,14 +40,7 @@ export default function Board(props){
         <div ref={boardHandle} className="board-container">
             <div ref={boardSwitch} onClick={pullsOutTheBoard} className='board-handle'></div>
             <div className='board-content'>
-                <input ref={inputChangeBackground}></input>
-                <button
-                    className='button-change-background' 
-                    onClick={()=>{
-                        changeBackground(inputChangeBackground.current.value)
-                    }}>
-                        Применить
-                </button>
+               
                 <CreateNote 
                     counterKey={counterKey}
                     setCounterKey={setCounterKey}

@@ -139,6 +139,8 @@ export function CreateModalWindow(props){
                         className='input-modal' type="text" placeholder="Google">
                     </input>
                 </div>
+                <p>Добавить фон:</p>
+                <input className='input-load-img' ref={inputLoadImg} type='file' name='file' accept='image/*'></input>
                 <button  
                     className='button-modal'
                     onClick={() => {
@@ -146,7 +148,7 @@ export function CreateModalWindow(props){
                             props.cb();
                     }}
                 >Добавить</button>
-                <input className='input-load-img' ref={inputLoadImg} type='file' name='file' accept='image/*'></input>
+ 
             </div>
         </div>
     )
@@ -232,13 +234,15 @@ export function ChangeModalWindow(props){
                         ref={inputNameRef}
                         onChange={getInputValueNameLink}
                         className='input-modal' type="text" placeholder="Google"></input>
-                </div>
-                    <button onClick={() => {
-                        handleClickChange(props.bookmarkKey);
-                      
-                    }
-                    } className='button-modal'>Изменить</button>
-                    <input className='input-load-img' ref={inputLoadImg} type='file' name='file' accept='image/*'></input>
+                </div> 
+                <p>Добавить фон:</p>
+                <input className='input-load-img' ref={inputLoadImg} type='file' name='file' accept='image/*'></input>
+                <button onClick={() => {
+                    handleClickChange(props.bookmarkKey);
+                    
+                }
+                } className='button-modal'>Изменить</button>
+                  
             </div>
         </div>
     )

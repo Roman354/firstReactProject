@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useState, useEffect }  from 'react';
+import React, {useState, useEffect, useRef }  from 'react';
 import useLocalStorage from "./useLocalStorage.js";
 import defaultBackground from '../src/background.jpeg'
 import {ChangeModalWindow, CreateModalWindow} from '../src/ModalWindows.js';
@@ -8,9 +8,10 @@ import Board from '../src/Board.js';
 function App() {
     const [createModalWindowFlag, setCreateModalWindowFlag] = useState(false);
     const [changeModalWindowFlag, setChangeModalWindowFlag] = useState(false);
+    const [modalSetting, setModalSetting] = useState(false);
     const [changeBookmark, setChangeBookmark] = useState(null);
     const [bookmarkArr, setBookmarkArr] = useLocalStorage("bookmarks",  []);
-
+  
     const [backgroundImage, setBackgroundImage] = useLocalStorage("boardImg",  defaultBackground);
     const [counterKey, setCounterKey] = useState(()=>{
         return bookmarkArr.length > 0 ?  Math.max(...bookmarkArr.map(item => item.key)) + 1 : 0;
@@ -23,6 +24,11 @@ function App() {
     return (
         <div className="App">
         <header>
+            <Settings
+                flag={modalSetting}
+                flagChange={setModalSetting}
+                setBackgroundImage={setBackgroundImage}
+            />
             <Clock />
         </header>
         <main className="main-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
@@ -61,11 +67,87 @@ function App() {
                     />
                 </div>
                 <Board 
-                    setBackgroundImage={setBackgroundImage}
+
                 />
             </main>
         </div>
   );
+}
+
+function Settings(props){
+      
+    const inputUnsplashBackground = useRef(null);
+    const inputLocalImg = useRef(null);
+    
+ 
+    function handleClickCreate(cb){
+        if(inputUnsplashBackground.current.value !== "")
+        {
+            changeBackground(inputUnsplashBackground.current.value);
+            inputUnsplashBackground.current.value = "";
+        }
+        if(inputUnsplashBackground.current.value === "" && inputLocalImg.current.value !== ""){
+            
+            const file = inputLocalImg.current.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                inputUnsplashBackground.current.value = "";
+                inputLocalImg.current.value = "";
+                reader.onload = () => {
+                    props.setBackgroundImage(reader.result);
+                
+                };
+               
+                reader.readAsDataURL(file);
+            } else {
+                alert("Пожалуйста, выберите файл изображения.");
+            }
+        }
+        cb();
+             
+    }
+
+    async function changeBackground(query)
+    {
+        const accessKey = 'bfs3AZiy96Dr00cW3P_XOhufG55FZDGkrLeyWev6VKY'; 
+        const url = `https://api.unsplash.com/search/photos?query=${query}&client_id=${accessKey}`;
+        
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.results.length > 0) {
+              const imageUrl = `${data.results[0].urls.raw}&w=${window.screen.width}&h=${window.screen.height}&fit=crop`;
+              props.setBackgroundImage(imageUrl);
+            } else {
+              throw new Error('Изображения не найдены');
+            }
+        } catch (error) {
+            console.error('Ошибка при загрузке изображения с Unsplash:', error);
+            throw error;
+        }
+    }
+   return(
+        <>
+            <button  onMouseDown={()=>{props.flagChange(true)}}
+            className='setting-button'></button>
+            <div className={props.flag ? 'modal-background' : 'disable'} onMouseDown={()=>{props.flagChange(false)}}>
+                <div className='modal-container' onMouseDown={(e)=>{e.stopPropagation();}}>
+                    <p>Введите текстовый запрос картинки:</p>
+                    <input className='input-unsplash' ref={inputUnsplashBackground}></input>
+                    <p>Или зарузите свою картинку:</p>
+                    <input  className='input-load-img' ref={inputLocalImg} type='file' name='file' accept='image/*'></input>
+                    <button
+                        className='button-change-background' 
+                        onClick={()=>{
+                            handleClickCreate(()=>{props.flagChange(false)})
+                           
+                        }}>
+                            Применить
+                    </button>
+                </div> 
+            </div>
+        </>
+   ) 
 }
 
 function Bookmarks(props){
