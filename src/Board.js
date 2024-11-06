@@ -13,17 +13,9 @@ export default function Board(props){
     function pullsOutTheBoard(){
         boardHandle.current.classList.toggle("visible");
         boardSwitch.current.classList.toggle("visible");
-        // setArrNotes([
-        //     {text:"Текст первой записки", position:{x:0,y:0},key:1},
-        //     {text:"Я крутой", position:{x:100,y:100},key:2}
-        
-        // ])
     }
-    
-   
 
     function getListNotes () {
-
         return arrNotes.map(note => 
             <Note 
                 arrNotes={arrNotes}
@@ -170,7 +162,7 @@ function CreateNote(props)
             ...props.arrNotes,
             {"text":"","position":{"x":1508,"y":0}, "key": props.counterKey}
         ]);
-        props.setCounterKey(props.counterKey + 1)
+        props.setCounterKey(props.counterKey + 1);
     }
     return(
         <button 

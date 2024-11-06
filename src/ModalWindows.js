@@ -247,3 +247,49 @@ export function ChangeModalWindow(props){
         </div>
     )
 }
+
+export function QuestionModalWindow(){
+    const[modalFlag, setModalFlag] = useState(false);
+    const gifQuestion = useRef(null);
+    const answerQuestion = useRef(null);
+    function getAnswer(){
+        fetch('https://yesno.wtf/api')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok'); 
+            }
+            return response.json(); 
+        })
+        .then(data => {
+            console.log(data);
+            console.log(gifQuestion.current.className);
+            gifQuestion.current.classList.remove("disable");
+            gifQuestion.current.src = data.image;
+            answerQuestion.current.textContent = data.answer === "yes"? "Да" : "Нет";
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    }
+    return(
+        <>
+            <div onClick={()=>{setModalFlag(true)}} className="button-question"></div>
+            <div className={modalFlag ? 'modal-background' : 'disable'} onMouseDown={()=>{
+                gifQuestion.current.classList.add("disable");
+                answerQuestion.current.textContent ="";
+                setModalFlag(false)
+            }}>
+            <div className='modal-question' onMouseDown={(e)=>{e.stopPropagation();}}>
+                <h3>Получить ответ на вопрос(ДА или НЕТ)</h3>
+               
+             
+                <p className='question-answer-p' ref={answerQuestion}></p>
+                <img className='disable' ref={gifQuestion} alt="gif answer"></img>
+                <button onClick={getAnswer} className='button-question-background'>  
+                    Применить
+                </button>
+            </div> 
+            </div>
+        </>
+    )
+}

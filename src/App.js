@@ -2,7 +2,7 @@ import './App.css';
 import React, {useState, useEffect, useRef }  from 'react';
 import useLocalStorage from "./useLocalStorage.js";
 import defaultBackground from '../src/background.jpeg'
-import {ChangeModalWindow, CreateModalWindow} from '../src/ModalWindows.js';
+import {ChangeModalWindow, CreateModalWindow, QuestionModalWindow} from '../src/ModalWindows.js';
 import Board from '../src/Board.js';
 
 function App() {
@@ -51,24 +51,23 @@ function App() {
                 setBookmarkArr={setBookmarkArr}
                 bookmarkKey={changeBookmark}
             />
-          
-                <div className="page-container">
-                    <Bookmarks 
-                        bookmarks={bookmarkArr}
-                        setBookmarkArr={setBookmarkArr}
-                        setCounterKey={setCounterKey}
-                        setChangeBookmark={setChangeBookmark}
-                        cb={()=>{
-                            setChangeModalWindowFlag(true)
-                        }}
-                    />
-                    <CreateBlock 
-                        cb={handleClickFlag}
-                    />
-                </div>
-                <Board 
-
+            <QuestionModalWindow />
+            <div className="page-container">
+                <Bookmarks 
+                    bookmarks={bookmarkArr}
+                    setBookmarkArr={setBookmarkArr}
+                    setCounterKey={setCounterKey}
+                    setChangeBookmark={setChangeBookmark}
+                    cb={()=>{
+                        setChangeModalWindowFlag(true)
+                    }}
                 />
+                <CreateBlock 
+                    cb={handleClickFlag}
+                />
+            </div>
+            <Board/>
+
             </main>
         </div>
   );
@@ -195,7 +194,6 @@ function Bookmarks(props){
                             e.preventDefault()
                             setDeleteModalFlag(true)
                             setKey(bookmark.key);
-                            // 
                         }}
                         className="delete-bookmark">✕</span>
                 </div>
@@ -248,4 +246,6 @@ function Clock (){
         </div>
     )
 }
+
+
 export default App;

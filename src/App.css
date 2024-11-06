@@ -14,8 +14,6 @@
   display: flex;
   justify-content:flex-end;
   align-items: center;
-
-
 }
 .link-bookmark{
   position: relative;
@@ -24,7 +22,6 @@
 
 .create-block{
   position: relative;
-
   cursor: pointer;
 }
 .delete-bookmark{
@@ -37,7 +34,6 @@
   background: red;
   padding: 0 5px;
   border-radius: 2px;
-  
 }
 .delete-modal{
   width: 400px;
@@ -70,8 +66,7 @@ a.link-bookmark:hover, .create-block:hover{
   position: absolute;
   top: 10px;
   width: 35px;
-  height: 32px;
- 
+  height: 32px; 
   font-size: 50px;
   color: #fff;
   font-weight: 400;
@@ -124,7 +119,7 @@ a.link-bookmark:hover .delete-bookmark,a.link-bookmark:hover .change-bookmark{
 .clock-div p{
   display: inline;
 }
-.modal-container{
+.modal-container, .modal-question{
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -137,6 +132,13 @@ a.link-bookmark:hover .delete-bookmark,a.link-bookmark:hover .change-bookmark{
   height: auto;
   width: 20%;
   z-index: 2;
+
+}
+.modal-question{
+  top: 25%;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 .modal-background{
     top: 0;
@@ -231,7 +233,7 @@ a.link-bookmark:hover .delete-bookmark,a.link-bookmark:hover .change-bookmark{
 .board-handle.visible{
   transform: scale(-1, 1);
 }
-.button-change-background{
+.button-change-background, .button-question-background{
   background: #c6e5a2;
   width: 100px;
   height: 30px;
@@ -241,7 +243,7 @@ a.link-bookmark:hover .delete-bookmark,a.link-bookmark:hover .change-bookmark{
   font-size: 15px;
   cursor: pointer;
 }
-.button-change-background:hover{
+.button-change-background:hover, .button-question-background:hover{
   background: #67b709;
 }
 .board-content input{
@@ -251,7 +253,7 @@ a.link-bookmark:hover .delete-bookmark,a.link-bookmark:hover .change-bookmark{
   margin-right: 5px;
 }
 .note{
-  /* #fffbcc */
+  white-space: pre-wrap;
   background-color: #fffbcc; 
   overflow-wrap: break-word;
   padding: 10px;
@@ -336,16 +338,17 @@ a.link-bookmark:hover .delete-bookmark,a.link-bookmark:hover .change-bookmark{
 
 .input-load-img::-webkit-file-upload-button {
   display: none;
-  /* visibility: hidden; */
 }
 
 .setting-button{
+  border-radius: 6px;
+  background-color: #57575724;
+  box-shadow: inset 0px 0px 3px #212121;
   position: absolute;
   top: 5px;
   right: 10px;
   width: 30px;
   height: 30px;
-  /* background: aliceblue; */
   z-index: 1;
   background: url("./setting.png") no-repeat center center;
   background-size: cover;
@@ -363,4 +366,87 @@ a.link-bookmark:hover .delete-bookmark,a.link-bookmark:hover .change-bookmark{
 }
 .modal-container p, .modal-container input{
   margin: 0;
+}
+.button-question{
+  border-radius: 4px;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  background:url("./question.png") no-repeat center center;
+  background-size: cover;
+  background-color: #0000005c;
+  box-shadow: inset 0px 0px 3px aliceblue;
+  bottom: 5px;
+  left: 10px;
+  cursor: pointer;
+  transition: scale 0.3s ease;
+
+}
+.button-question:hover{
+  scale: 1.1;
+}
+.question-answer-p{
+  font-size: 25px;
+  text-align: center;
+  margin: 0;
+}
+@media (max-width:1024px) {
+  .inscription-bookmark{
+    width: 210px;
+    height: 140px;
+  }
+  .img-bookmark{
+    height: 117px;
+  }
+  .page-container{
+    padding: 6% 5%;
+  }
+  .note{
+    width: 160px;
+    min-height: 100px;
+    max-height: 400px;
+    font-size: 14px;
+  }
+}
+@media (min-width:2024px) {
+  .inscription-bookmark{
+    width: 310px;
+    height: 190px;
+  }
+  .img-bookmark{
+    height: 147px;
+  }
+  .page-container{
+    padding: 6% 5%;
+  }
+  .bookmarks-Name {
+    font-size: 30px;
+    height: 42px;
+  }
+  .note{
+    width: 260px;
+    min-height: 150px;
+    max-height: 520px;
+    font-size: 20px;
+  }
+}
+@media (min-width:3000px) {
+  .inscription-bookmark{
+    width: 380px;
+    height: 240px;
+  }
+  .img-bookmark{
+    height: 197px;
+  }
+
+  .bookmarks-Name {
+    font-size: 35px;
+    height: 62px;
+  }
+  .note{
+    width: 300px;
+    min-height: 180px;
+    max-height: 600px;
+    font-size: 24px;
+  }
 }
